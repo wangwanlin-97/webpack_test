@@ -9,6 +9,7 @@ module.exports = {
     output:{
         path:path.resolve(__dirname,'dist'),
         filename: '[name]-[contenthash].js',
+        assetModuleFilename:'assets/images/[name][ext]',
         clean:true
     },
     module:{
@@ -20,6 +21,20 @@ module.exports = {
                     "css-loader",
                     "sass-loader",
                 ]
+            },
+            {
+                test:/\.js$/,
+                exclude:/node_modules/,
+                use:{
+                    loader:"babel-loader",
+                    options:{
+                        presets:['@babel/preset-env']
+                    }
+                }
+            },
+            {
+                test:/\.(png|jpg|jpeg|svg|gif)$/i,
+                type:"asset/resource",
             }
         ]
     },
@@ -28,5 +43,16 @@ module.exports = {
             title: 'Webpack Application',
             template:path.resolve(__dirname,'src/index.html'),
         })
-    ]
+    ],
+    devtool:'source-map',
+    devServer:{
+        static:{
+            directory:path.resolve(__dirname,'dist')
+        },
+        compress:true,
+        port:3000,
+        open:true,
+        hot:true,
+        historyApiFallback:true,
+    }
 }
